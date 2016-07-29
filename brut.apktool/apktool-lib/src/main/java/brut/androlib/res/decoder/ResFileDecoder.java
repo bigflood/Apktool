@@ -18,6 +18,7 @@ package brut.androlib.res.decoder;
 
 import brut.androlib.AndrolibException;
 import brut.androlib.err.CantFind9PatchChunk;
+import brut.androlib.err.UndefinedResObject;
 import brut.androlib.res.data.ResResource;
 import brut.androlib.res.data.value.ResBoolValue;
 import brut.androlib.res.data.value.ResFileValue;
@@ -118,8 +119,9 @@ public class ResFileDecoder {
                 OutputStream out = outDir.getFileOutput(outFileName)
         ) {
             mDecoders.decode(in, out, decoder);
-        } catch (DirectoryException | IOException ex) {
-            throw new AndrolibException(ex);
+        } catch (DirectoryException | IOException | UndefinedResObject ex) {
+            ex.printStackTrace();
+            //throw new AndrolibException(ex);
         }
     }
 

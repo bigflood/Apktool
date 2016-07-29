@@ -39,12 +39,19 @@ public class ResAttrDecoder {
                         .getResSpec(attrResId).getDefaultResource().getValue();
 
                 decoded = attr.convertToResXmlFormat(resValue);
+                if (decoded != null) return decoded;
             } catch (UndefinedResObject | ClassCastException ex) {
                 // ignored
             }
         }
 
-        return decoded != null ? decoded : resValue.encodeAsResXmlAttr();
+        try {
+            return resValue.encodeAsResXmlAttr();
+        } catch (UndefinedResObject | ClassCastException ex) {
+            // ignored
+        }
+
+        return "--decoding-failed--";
     }
 
     public String decodeManifestAttr(int attrResId)

@@ -21,8 +21,7 @@ import brut.directory.IFile;
 import org.jf.baksmali.baksmali;
 import org.jf.baksmali.baksmaliOptions;
 import org.jf.dexlib2.DexFileFactory;
-import org.jf.dexlib2.dexbacked.DexBackedDexFile;
-import org.jf.dexlib2.dexbacked.DexBackedOdexFile;
+import org.jf.dexlib2.dexbacked.*;
 import org.jf.dexlib2.analysis.InlineMethodResolver;
 
 import java.io.File;
@@ -86,6 +85,29 @@ public class SmaliDecoder {
             System.out.printf("decode %s %s \n", mOutDir.getAbsolutePath(), mDexFile);
 
             baksmali.disassembleDexFile(dexFile, options);
+
+            for(DexBackedClassDef cls :dexFile.getClasses()) {
+                //System.out.printf("%s > %s \n", cls.getType(), cls.getSuperclass());
+
+                if (cls.getType().endsWith("/AndroidGameActivity;")) {
+                    for(DexBackedField f : cls.getStaticFields()) {
+                        System.out.printf("static field %s > %s \n", f.getName(), f.getInitialValue());
+                    }
+
+                    for(DexBackedField f : cls.getFields()) {
+                        System.out.printf("field %s > %s \n", f.getName(), f.getInitialValue());
+                    }
+
+                    for(DexBackedField f : cls.getInstanceFields()) {
+                        System.out.printf("instance field %s > %s \n", f.getName(), f.getInitialValue());
+                    }
+
+                    for(DexBackedMethod f : cls.getMethods()) {
+                        System.out.printf("method %s > %s \n", f.getName(), "..");
+                    }
+                }
+            }
+
         } catch (IOException ex) {
             throw new AndrolibException(ex);
         }

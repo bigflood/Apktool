@@ -1,3 +1,7 @@
+** This is a fork of Apktool for experiments.
+original Apktool is here -> https://ibotpeaches.github.io/Apktool **
+
+
 ### Apktool
 **This is the repository for Apktool. If you are looking for the Apktool website. Click [here](https://github.com/iBotPeaches/Apktool/tree/gh-pages).**
 

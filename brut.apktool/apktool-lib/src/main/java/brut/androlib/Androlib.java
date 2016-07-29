@@ -211,10 +211,6 @@ public class Androlib {
         return false;
     }
 
-    public static String getVersion() {
-        return ApktoolProperties.get("application.version");
-    }
-
     private final static Logger LOGGER = Logger.getLogger(Androlib.class.getName());
 
     private final static String SMALI_DIRNAME = "smali";

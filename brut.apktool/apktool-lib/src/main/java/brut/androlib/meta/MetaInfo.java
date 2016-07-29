@@ -26,7 +26,7 @@ import java.util.Collection;
 import java.util.Map;
 
 public class MetaInfo {
-    public String version;
+    //public String version;
     public String apkFileName;
     //public UsesFramework usesFramework;
     public  Map<String, String> sdkInfo;

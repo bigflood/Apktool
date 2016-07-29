@@ -86,11 +86,11 @@ public class Main {
 
         // if no commands ran, run the version / usage check.
         if (cmdFound == false) {
-            if (commandLine.hasOption("version") || commandLine.hasOption("version")) {
-                _version();
-            } else {
+            //if (commandLine.hasOption("version") || commandLine.hasOption("version")) {
+                //_version();
+            //} else {
                 usage();
-            }
+            //}
         }
     }
 
@@ -173,9 +173,9 @@ public class Main {
 
     }
 
-    private static void _version() {
-        System.out.println(Androlib.getVersion());
-    }
+    //private static void _version() {
+    //    System.out.println(Androlib.getVersion());
+    //}
 
     @SuppressWarnings("static-access")
     private static void _Options() {
@@ -360,12 +360,12 @@ public class Main {
         formatter.setWidth(120);
 
         // print out license info prior to formatter.
-        System.out.println(
-                "Apktool v" + Androlib.getVersion() + " - a tool for reengineering Android apk files\n" +
-                        "with smali v" + ApktoolProperties.get("smaliVersion") +
-                        " and baksmali v" + ApktoolProperties.get("baksmaliVersion") + "\n" +
-                        "Copyright 2014 Ryszard Wiśniewski <brut.alll@gmail.com>\n" +
-                        "Updated by Connor Tumbleson <connor.tumbleson@gmail.com>" );
+//        System.out.println(
+//                "Apktool v" + Androlib.getVersion() + " - a tool for reengineering Android apk files\n" +
+//                        "with smali v" + ApktoolProperties.get("smaliVersion") +
+//                        " and baksmali v" + ApktoolProperties.get("baksmaliVersion") + "\n" +
+//                        "Copyright 2014 Ryszard Wiśniewski <brut.alll@gmail.com>\n" +
+//                        "Updated by Connor Tumbleson <connor.tumbleson@gmail.com>" );
         if (isAdvanceMode()) {
             System.out.println("Apache License 2.0 (http://www.apache.org/licenses/LICENSE-2.0)\n");
         }else {

@@ -83,7 +83,7 @@ public class ApkDecoder {
         outDir.rmdir();
         outDir.mkdirs();
 
-        LOGGER.info("Using Apktool " + Androlib.getVersion() + " on " + mApkFile.getName());
+        //LOGGER.info("Using Apktool " + Androlib.getVersion() + " on " + mApkFile.getName());
 
         if (hasResources()) {
             switch (mDecodeResources) {
@@ -278,7 +278,7 @@ public class ApkDecoder {
 
     private void writeMetaFile() throws AndrolibException {
         MetaInfo meta = new MetaInfo();
-        meta.version = Androlib.getVersion();
+        //meta.version = Androlib.getVersion();
         meta.apkFileName = mApkFile.getName();
 
         if (mDecodeResources != DECODE_RESOURCES_NONE && (hasManifest() || hasResources())) {
@@ -294,29 +294,6 @@ public class ApkDecoder {
 
         mAndrolib.writeMetaFile(mOutDir, meta);
     }
-
-    /*
-    private void putUsesFramework(MetaInfo meta) throws AndrolibException {
-        Set<ResPackage> pkgs = getResTable().listFramePackages();
-        if (pkgs.isEmpty()) {
-            return;
-        }
-
-        Integer[] ids = new Integer[pkgs.size()];
-        int i = 0;
-        for (ResPackage pkg : pkgs) {
-            ids[i++] = pkg.getId();
-        }
-        Arrays.sort(ids);
-
-        meta.usesFramework = new UsesFramework();
-        meta.usesFramework.ids = Arrays.asList(ids);
-
-        if (mAndrolib.apkOptions.frameworkTag != null) {
-            meta.usesFramework.tag = mAndrolib.apkOptions.frameworkTag;
-        }
-    }
-    */
 
     private void putSdkInfo(MetaInfo meta) throws AndrolibException {
         Map<String, String> info = getResTable().getSdkInfo();
@@ -362,8 +339,6 @@ public class ApkDecoder {
     }
 
     private final Androlib mAndrolib;
-
-    private final static Logger LOGGER = Logger.getLogger(Androlib.class.getName());
 
     private IFile mApkFile;
     private IFile mOutDir;

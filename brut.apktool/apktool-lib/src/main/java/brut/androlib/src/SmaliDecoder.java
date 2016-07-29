@@ -17,6 +17,7 @@
 package brut.androlib.src;
 
 import brut.androlib.AndrolibException;
+import brut.directory.IFile;
 import org.jf.baksmali.baksmali;
 import org.jf.baksmali.baksmaliOptions;
 import org.jf.dexlib2.DexFileFactory;
@@ -32,12 +33,12 @@ import java.io.IOException;
  */
 public class SmaliDecoder {
 
-    public static void decode(File apkFile, File outDir, String dexName, boolean bakdeb, int api)
+    public static void decode(IFile apkFile, IFile outDir, String dexName, boolean bakdeb, int api)
             throws AndrolibException {
         new SmaliDecoder(apkFile, outDir, dexName, bakdeb, api).decode();
     }
 
-    private SmaliDecoder(File apkFile, File outDir, String dexName, boolean bakdeb, int api) {
+    private SmaliDecoder(IFile apkFile, IFile outDir, String dexName, boolean bakdeb, int api) {
         mApkFile = apkFile;
         mOutDir  = outDir;
         mDexFile = dexName;
@@ -51,7 +52,7 @@ public class SmaliDecoder {
 
             // options
             options.deodex = false;
-            options.outputDirectory = mOutDir.toString();
+            options.outputDirectory = mOutDir.getAbsolutePath();
             options.noParameterRegisters = false;
             options.useLocalsDirective = true;
             options.useSequentialLabels = true;
@@ -71,7 +72,7 @@ public class SmaliDecoder {
             }
 
             // create the dex
-            DexBackedDexFile dexFile = DexFileFactory.loadDexFile(mApkFile, mDexFile, mApi, false);
+            DexBackedDexFile dexFile = DexFileFactory.loadDexFile(new File(mApkFile.getAbsolutePath()), mDexFile, mApi, false);
 
             if (dexFile.isOdexFile()) {
                 throw new AndrolibException("Warning: You are disassembling an odex file without deodexing it.");
@@ -82,14 +83,16 @@ public class SmaliDecoder {
                         InlineMethodResolver.createInlineMethodResolver(((DexBackedOdexFile)dexFile).getOdexVersion());
             }
 
+            System.out.printf("decode %s %s \n", mOutDir.getAbsolutePath(), mDexFile);
+
             baksmali.disassembleDexFile(dexFile, options);
         } catch (IOException ex) {
             throw new AndrolibException(ex);
         }
     }
 
-    private final File mApkFile;
-    private final File mOutDir;
+    private final IFile mApkFile;
+    private final IFile mOutDir;
     private final String mDexFile;
     private final boolean mBakDeb;
     private final int mApi;

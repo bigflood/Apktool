@@ -41,10 +41,10 @@ public interface Directory {
         throws DirectoryException;
     public void copyToDir(Directory out, String fileName)
         throws DirectoryException;
-    public void copyToDir(File out) throws DirectoryException;
-    public void copyToDir(File out, String[] fileNames)
+    public void copyToDir(IFile out) throws DirectoryException;
+    public void copyToDir(IFile out, String[] fileNames)
         throws DirectoryException;
-    public void copyToDir(File out, String fileName)
+    public void copyToDir(IFile out, String fileName)
         throws DirectoryException;
 
     public int getCompressionLevel(String fileName)

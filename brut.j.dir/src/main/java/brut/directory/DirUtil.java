@@ -55,34 +55,34 @@ public class DirUtil {
         }
     }
 
-    public static void copyToDir(Directory in, File out)
+    public static void copyToDir(Directory in, IFile out)
             throws DirectoryException {
         for (String fileName : in.getFiles(true)) {
             copyToDir(in, out, fileName);
         }
     }
 
-    public static void copyToDir(Directory in, File out, String[] fileNames)
+    public static void copyToDir(Directory in, IFile out, String[] fileNames)
             throws DirectoryException {
         for (int i = 0; i < fileNames.length; i++) {
             copyToDir(in, out, fileNames[i]);
         }
     }
 
-    public static void copyToDir(Directory in, File out, String fileName)
+    public static void copyToDir(Directory in, IFile out, String fileName)
             throws DirectoryException {
         try {
             if (in.containsDir(fileName)) {
-                OS.rmdir(new File(out, fileName));
-                in.getDir(fileName).copyToDir(new File(out, fileName));
+                new IFile(out, fileName).rmdir();
+                in.getDir(fileName).copyToDir(new IFile(out, fileName));
             } else {
                 if (fileName.equals("res") && !in.containsFile(fileName)) {
                     return;
                 }
-                File outFile = new File(out, fileName);
+                IFile outFile = new IFile(out, fileName);
                 outFile.getParentFile().mkdirs();
                 BrutIO.copyAndClose(in.getFileInput(fileName),
-                    new FileOutputStream(outFile));
+                    outFile.getOutputStream());
             }
         } catch (IOException ex) {
             throw new DirectoryException(

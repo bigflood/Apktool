@@ -26,6 +26,7 @@ import java.net.URI;
 /**
  * @author Ryszard Wiśniewski <brut.alll@gmail.com>
  */
+/*
 public class ExtFile extends File {
     public ExtFile(File file) {
         super(file.getPath());
@@ -60,3 +61,4 @@ public class ExtFile extends File {
 
     private Directory mDirectory;
 }
+*/

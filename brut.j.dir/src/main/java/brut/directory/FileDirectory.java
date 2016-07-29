@@ -17,22 +17,16 @@
 package brut.directory;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 
 public class FileDirectory extends AbstractDirectory {
-    private File mDir;
+    private IFile mDir;
 
-    public FileDirectory(String dir) throws DirectoryException {
-        this(new File(dir));
-    }
-
-    public FileDirectory(File dir) throws DirectoryException {
+    public FileDirectory(IFile dir) throws DirectoryException {
         super();
         if (! dir.isDirectory()) {
             throw new DirectoryException("file must be a directory: " + dir);
@@ -42,7 +36,7 @@ public class FileDirectory extends AbstractDirectory {
 
     @Override
     protected AbstractDirectory createDirLocal(String name) throws DirectoryException {
-        File dir = new File(generatePath(name));
+        IFile dir = new IFile(generatePath(name));
         dir.mkdir();
         return new FileDirectory(dir);
     }
@@ -50,7 +44,7 @@ public class FileDirectory extends AbstractDirectory {
     @Override
     protected InputStream getFileInputLocal(String name) throws DirectoryException {
         try {
-            return new FileInputStream(generatePath(name));
+            return new IFile(generatePath(name)).getInputStream();
         } catch (FileNotFoundException e) {
             throw new DirectoryException(e);
         }
@@ -59,7 +53,7 @@ public class FileDirectory extends AbstractDirectory {
     @Override
     protected OutputStream getFileOutputLocal(String name) throws DirectoryException {
         try {
-            return new FileOutputStream(generatePath(name));
+            return new IFile(generatePath(name)).getOutputStream();
         } catch (FileNotFoundException e) {
             throw new DirectoryException(e);
         }
@@ -88,9 +82,9 @@ public class FileDirectory extends AbstractDirectory {
         mFiles = new LinkedHashSet<String>();
         mDirs = new LinkedHashMap<String, AbstractDirectory>();
         
-        File[] files = getDir().listFiles();
+        IFile[] files = getDir().listFiles();
         for (int i = 0; i < files.length; i++) {
-            File file = files[i];
+            IFile file = files[i];
             if (file.isFile()) {
                 mFiles.add(file.getName());
             } else {
@@ -102,7 +96,7 @@ public class FileDirectory extends AbstractDirectory {
         }
     }
 
-    private File getDir() {
+    private IFile getDir() {
         return mDir;
     }
 }

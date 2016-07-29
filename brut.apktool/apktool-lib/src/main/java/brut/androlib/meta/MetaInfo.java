@@ -15,6 +15,7 @@
  */
 package brut.androlib.meta;
 
+import brut.directory.IFile;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.introspector.PropertyUtils;
@@ -27,12 +28,9 @@ import java.util.Map;
 public class MetaInfo {
     public String version;
     public String apkFileName;
-    public boolean isFrameworkApk;
-    public UsesFramework usesFramework;
+    //public UsesFramework usesFramework;
     public  Map<String, String> sdkInfo;
     public PackageInfo packageInfo;
-    public VersionInfo versionInfo;
-    public boolean compressionType;
     public boolean sharedLibrary;
     public Map<String, String> unknownFiles;
     public Collection<String> doNotCompress;
@@ -54,9 +52,9 @@ public class MetaInfo {
         getYaml().dump(this, output);
     }
 
-    public void save(File file) throws IOException {
+    public void save(IFile file) throws IOException {
         try(
-                FileOutputStream fos = new FileOutputStream(file);
+                OutputStream fos = file.getOutputStream();
                 OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fos, StandardCharsets.UTF_8);
                 Writer writer = new BufferedWriter(outputStreamWriter)
         ){
@@ -68,11 +66,4 @@ public class MetaInfo {
         return getYaml().loadAs(is, MetaInfo.class);
     }
 
-    public static MetaInfo load(File file) throws IOException {
-        try (
-                InputStream fis = new FileInputStream(file)
-        ){
-            return load(fis);
-        }
-    }
 }

@@ -79,9 +79,9 @@ public class ResTable {
         if (pkg != null) {
             return pkg;
         }
-        if (mAndRes != null) {
-            return mAndRes.loadFrameworkPkg(this, id, mAndRes.apkOptions.frameworkTag);
-        }
+        //if (mAndRes != null) {
+        //    return mAndRes.loadFrameworkPkg(this, id, mAndRes.apkOptions.frameworkTag);
+        //}
         throw new UndefinedResObject(String.format("package: id=%d", id));
     }
 

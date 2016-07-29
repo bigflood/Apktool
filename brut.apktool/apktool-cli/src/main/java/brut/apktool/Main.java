@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.logging.*;
 
 import brut.directory.DirectoryException;
+import brut.directory.IFile;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
@@ -48,7 +49,7 @@ public class Main {
 
         // cli parser
         CommandLineParser parser = new PosixParser();
-        CommandLine commandLine = null;
+        CommandLine commandLine;
 
         // load options
         _Options();
@@ -57,7 +58,7 @@ public class Main {
             commandLine = parser.parse(allOptions, args, false);
         } catch (ParseException ex) {
             System.err.println(ex.getMessage());
-            usage(commandLine);
+            usage();
             return;
         }
 
@@ -80,15 +81,6 @@ public class Main {
             if (opt.equalsIgnoreCase("d") || opt.equalsIgnoreCase("decode")) {
                 cmdDecode(commandLine);
                 cmdFound = true;
-            } else if (opt.equalsIgnoreCase("b") || opt.equalsIgnoreCase("build")) {
-                cmdBuild(commandLine);
-                cmdFound = true;
-            } else if (opt.equalsIgnoreCase("if") || opt.equalsIgnoreCase("install-framework")) {
-                cmdInstallFramework(commandLine);
-                cmdFound = true;
-            } else if (opt.equalsIgnoreCase("publicize-resources")) {
-                cmdPublicizeResources(commandLine);
-                cmdFound = true;
             }
         }
 
@@ -97,7 +89,7 @@ public class Main {
             if (commandLine.hasOption("version") || commandLine.hasOption("version")) {
                 _version();
             } else {
-                usage(commandLine);
+                usage();
             }
         }
     }
@@ -107,7 +99,7 @@ public class Main {
 
         int paraCount = cli.getArgList().size();
         String apkName = (String) cli.getArgList().get(paraCount - 1);
-        File outDir = null;
+        IFile outDir = null;
 
         // check for options
         if (cli.hasOption("s") || cli.hasOption("no-src")) {
@@ -120,9 +112,9 @@ public class Main {
         if (cli.hasOption("b") || cli.hasOption("no-debug-info")) {
             decoder.setBaksmaliDebugMode(false);
         }
-        if (cli.hasOption("t") || cli.hasOption("frame-tag")) {
-            decoder.setFrameworkTag(cli.getOptionValue("t"));
-        }
+//        if (cli.hasOption("t") || cli.hasOption("frame-tag")) {
+//            decoder.setFrameworkTag(cli.getOptionValue("t"));
+//        }
         if (cli.hasOption("f") || cli.hasOption("force")) {
             decoder.setForceDelete(true);
         }
@@ -132,9 +124,9 @@ public class Main {
         if (cli.hasOption("k") || cli.hasOption("keep-broken-res")) {
             decoder.setKeepBrokenResources(true);
         }
-        if (cli.hasOption("p") || cli.hasOption("frame-path")) {
-            decoder.setFrameworkDir(cli.getOptionValue("p"));
-        }
+//        if (cli.hasOption("p") || cli.hasOption("frame-path")) {
+//            decoder.setFrameworkDir(cli.getOptionValue("p"));
+//        }
         if (cli.hasOption("m") || cli.hasOption("match-original")) {
             decoder.setAnalysisMode(true, false);
         }
@@ -142,22 +134,15 @@ public class Main {
             decoder.setApi(Integer.parseInt(cli.getOptionValue("api")));
         }
         if (cli.hasOption("o") || cli.hasOption("output")) {
-            outDir = new File(cli.getOptionValue("o"));
+            outDir = new IFile(cli.getOptionValue("o"));
             decoder.setOutDir(outDir);
         } else {
-
-            // make out folder manually using name of apk
             String outName = apkName;
-            outName = outName.endsWith(".apk") ? outName.substring(0,
-                    outName.length() - 4).trim() : outName + ".out";
-
-            // make file from path
-            outName = new File(outName).getName();
-            outDir = new File(outName);
+            outDir = new IFile(outName);
             decoder.setOutDir(outDir);
         }
 
-        decoder.setApkFile(new File(apkName));
+        decoder.setApkFile(new IFile(apkName));
 
         try {
             decoder.decode();
@@ -186,65 +171,6 @@ public class Main {
             System.exit(1);
         }
 
-    }
-
-    private static void cmdBuild(CommandLine cli) throws BrutException {
-        String[] args = cli.getArgs();
-        String appDirName = args.length < 2 ? "." : args[1];
-        File outFile = null;
-        ApkOptions apkOptions = new ApkOptions();
-
-        // check for build options
-        if (cli.hasOption("f") || cli.hasOption("force-all")) {
-            apkOptions.forceBuildAll = true;
-        }
-        if (cli.hasOption("d") || cli.hasOption("debug")) {
-            System.out.println("SmaliDebugging has been removed in 2.1.0 onward. Please see: https://github.com/iBotPeaches/Apktool/issues/1061");
-            apkOptions.debugMode = true;
-        }
-        if (cli.hasOption("v") || cli.hasOption("verbose")) {
-            apkOptions.verbose = true;
-        }
-        if (cli.hasOption("a") || cli.hasOption("aapt")) {
-            apkOptions.aaptPath = cli.getOptionValue("a");
-        }
-        if (cli.hasOption("c") || cli.hasOption("copy-original")) {
-            apkOptions.copyOriginalFiles = true;
-        }
-        if (cli.hasOption("p") || cli.hasOption("frame-path")) {
-            apkOptions.frameworkFolderLocation = cli.getOptionValue("p");
-        }
-        if (cli.hasOption("o") || cli.hasOption("output")) {
-            outFile = new File(cli.getOptionValue("o"));
-        } else {
-            outFile = null;
-        }
-
-        // try and build apk
-        new Androlib(apkOptions).build(new File(appDirName), outFile);
-    }
-
-    private static void cmdInstallFramework(CommandLine cli)
-            throws AndrolibException {
-        int paraCount = cli.getArgList().size();
-        String apkName = (String) cli.getArgList().get(paraCount - 1);
-
-        ApkOptions apkOptions = new ApkOptions();
-        if (cli.hasOption("p") || cli.hasOption("frame-path")) {
-            apkOptions.frameworkFolderLocation = cli.getOptionValue("p");
-        }
-        if (cli.hasOption("t") || cli.hasOption("tag")) {
-            apkOptions.frameworkTag = cli.getOptionValue("t");
-        }
-        new Androlib(apkOptions).installFramework(new File(apkName));
-    }
-
-    private static void cmdPublicizeResources(CommandLine cli)
-            throws AndrolibException {
-        int paraCount = cli.getArgList().size();
-        String apkName = (String) cli.getArgList().get(paraCount - 1);
-
-        new Androlib().publicizeResources(new File(apkName));
     }
 
     private static void _version() {
@@ -426,7 +352,7 @@ public class Main {
         }
     }
 
-    private static void usage(CommandLine commandLine) {
+    private static void usage() {
 
         // load basicOptions
         _Options();

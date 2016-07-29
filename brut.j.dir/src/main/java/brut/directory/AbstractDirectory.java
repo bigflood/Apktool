@@ -193,16 +193,16 @@ public abstract class AbstractDirectory implements Directory {
         DirUtil.copyToDir(out, out, fileName);
     }
 
-    public void copyToDir(File out) throws DirectoryException {
+    public void copyToDir(IFile out) throws DirectoryException {
         DirUtil.copyToDir(this, out);
     }
 
-    public void copyToDir(File out, String[] fileNames)
+    public void copyToDir(IFile out, String[] fileNames)
             throws DirectoryException {
         DirUtil.copyToDir(this, out, fileNames);
     }
 
-    public void copyToDir(File out, String fileName)
+    public void copyToDir(IFile out, String fileName)
             throws DirectoryException {
         DirUtil.copyToDir(this, out, fileName);
     }
